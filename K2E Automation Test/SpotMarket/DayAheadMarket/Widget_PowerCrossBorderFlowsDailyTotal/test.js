@@ -2,7 +2,7 @@
  * Created by Paul on 04/12/2015.
  */
 
-var URL = 'http://k4view-test-k2e.azurewebsites.net/portal/';
+var URL = 'https://k4view-test-k2e.azurewebsites.net/portal/';
 //Save img as a .png or .jpg
 var imageType = '.png';
 //save images in what folder directory

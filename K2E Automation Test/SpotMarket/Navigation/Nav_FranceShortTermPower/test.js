@@ -1,7 +1,7 @@
 /**
  * Created by Paul on 26/11/2015.
  */
-var URL = 'http://k4view-test-k2e.azurewebsites.net/portal/';
+var URL = 'https://k4view-test-k2e.azurewebsites.net/portal/';
 var imageType = '.png';
 var imageLocation = 'img/';
 var username ='paul.conway@ark-energy.eu';
