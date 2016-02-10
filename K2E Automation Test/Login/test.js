@@ -3,32 +3,25 @@
  */
 
 var URL = 'https://k4view-test-k2e.azurewebsites.net/portal/';
-var userIsLogged = false;
 var imageType = '.png';
 var imageLocation = 'img/';
 var username ='paul.conway@ark-energy.eu';
-var password ='Ballygarve1993';
+var password ='Killoe1993';
 var loginURL='/login.microsoftonline.com/';
 var workOrSchoolAccount ='#aad_account_tile_link';
-var personalAccount ='#mso_account_tile_link';
 var userAccount = workOrSchoolAccount;
-var DAMar = '#DayAheadMarket';
-var Page = '';
 
 
 //Test Login Page
 casper.test.begin('UserLogin',function UserLogin(test)
 {
-    var loginButtonFailed = false;
     //Make Sure Correct Page is opened
     casper.start(URL, function()
     {
         //Check if the Title of the Page is correct
         this.reload();
-        this.wait(1000);
         console.log('Check if the Title of the Page is correct');
         test.assertTitle("K4VIEW", "TEST1 --K2E Portal Title is correct");
-        console.log('Title of page is correct');
     });
 
     //Set Size of Captured Screenshot
@@ -47,9 +40,11 @@ casper.test.begin('UserLogin',function UserLogin(test)
         },
         function fail()
         {
-            console.log('TEST2 --Login Button Failed');
-            casper.capture(imageLocation+'Login_Test2_Fail'+imageType);
-            loginButtonFailed = true;
+            this.wait(3000, function()
+            {
+                console.log('TEST2 --Login Button Failed');
+                casper.capture(imageLocation+'Login_Test2_Fail'+imageType);
+            });
         });
 
     //User is then Redirected to
@@ -58,14 +53,15 @@ casper.test.begin('UserLogin',function UserLogin(test)
         {
             test.assertUrlMatch(loginURL , "TEST3 --Login page detected.");
             //Wait 1 second
-            this.wait(1000);
         },
         function fail()
         {
-            //Capture Image If Failed
-            console.log('TEST3 --Login page was not detected');
-            casper.capture(imageLocation+'Login_Test3_Fail'+imageType);
-        },3000);
+            this.wait(3000, function()
+            {
+                console.log('TEST3 --Login page was not detected');
+                casper.capture(imageLocation+'Login_Test3_Fail'+imageType);
+            });
+        });
 
     /*
      * Check if the username, password fields and Sign In buttons Exist
@@ -83,9 +79,11 @@ casper.test.begin('UserLogin',function UserLogin(test)
         },
         function fail()
         {
-            //Capture Image If Failed
-            console.log('TEST4 --Username field was not found.');
-            casper.capture(imageLocation+'Login_Test4_Fail'+imageType);
+            this.wait(3000, function()
+            {
+                console.log('TEST4 --Username field was not found.');
+                casper.capture(imageLocation+'Login_Test4_Fail'+imageType);
+            });
         });
 
     //Enter in users username
@@ -93,8 +91,8 @@ casper.test.begin('UserLogin',function UserLogin(test)
     {
         console.log('Username being Entered');
         this.sendKeys("input#cred_userid_inputtext", username, {keepFocus: true, reset:true});
-        //Wait 1 second
-        this.wait(1000);
+        //Wait 1/2 second
+        this.wait(500);
     });
     //PASSWORD
     //Check is the username filed exists.
@@ -107,9 +105,11 @@ casper.test.begin('UserLogin',function UserLogin(test)
         },
         function fail()
         {
-            //Capture Image If Failed
-            console.log('TEST5 --Password field not found');
-            casper.capture(imageLocation+'Login_Test5_Fail'+imageType);
+            this.wait(3000, function()
+            {
+                console.log('TEST5 --Password field not found');
+                casper.capture(imageLocation+'Login_Test5_Fail'+imageType);
+            });
         });
 
     //Enter in users password
@@ -118,7 +118,7 @@ casper.test.begin('UserLogin',function UserLogin(test)
         console.log('Password being Entered');
         this.sendKeys("input#cred_password_inputtext", password, {keepFocus: true, reset:true });
         //Wait 1 second
-        this.wait(1000);
+        this.wait(250);
     });
 
     //Select Account Type
@@ -128,15 +128,16 @@ casper.test.begin('UserLogin',function UserLogin(test)
             console.log('Checking Account Type');
             test.assertExists(userAccount, "TEST6 --Account Type button found.");
             console.log('Clicking Account Type Button');
-            //Wait 1 second
-            this.wait(1000);
+            this.wait(250);
             this.click(userAccount);
         },
         function fail()
         {
-            //Capture Image If Failed
-            console.log('TEST6 --Account Type button not found.');
-            casper.capture(imageLocation+'Login_Test6_Fail'+imageType);
+            this.wait(3000, function()
+            {
+                console.log('TEST6 --Account Type button not found.');
+                casper.capture(imageLocation+'Login_Test6_Fail'+imageType);
+            });
         });
 
     //SIGN IN
@@ -144,22 +145,19 @@ casper.test.begin('UserLogin',function UserLogin(test)
     casper.waitForSelector("#cred_sign_in_button",
         function success()
         {
-            this.wait(1000, function()
-            {
-                casper.capture(imageLocation+'5--SignInPageAccount'+imageType);
-            });
             console.log('Checking if Sign button Exists');
             test.assertExists("#cred_sign_in_button", "TEST7 --Sign In button found.");
             console.log('Clicking Sign In Button');
             this.click("#cred_sign_in_button");
-            //Wait 1 second
-            this.wait(1000);
+            this.wait(250);
         },
         function fail()
         {
-            //Capture Image If Failed
-            console.log('TEST7 --Sign In button found.');
-            casper.capture(imageLocation+'Login_Test7_Fail'+imageType);
+            this.wait(3000, function()
+            {
+                console.log('TEST7 --Sign In button found.');
+                casper.capture(imageLocation+'Login_Test7_Fail'+imageType);
+            });
         });
 
     //Check URL to verify login
@@ -167,22 +165,18 @@ casper.test.begin('UserLogin',function UserLogin(test)
         function success()
         {
             test.assertUrlMatch(URL + Page, "TEST8 --Correct URL.");
-            //Wait 1 second
-            this.wait(1000);
+            this.wait(250);
         },
         function fail()
         {
-            test.assertUrlMatch(URL + Page, "TEST8 --InCorrect URL.");
-            //Capture Image If Failed
-            this.wait(1000, function()
+            this.wait(3000, function()
             {
-                console.log('TEST8 --InCorrect URL');
+                test.assertUrlMatch(URL + Page, "TEST8 --InCorrect URL.");
                 casper.capture(imageLocation+'Login_Test8_Fail'+imageType);
             });
 
-        },3000);
+        });
 
-    //Run Test
     casper.run(function()
     {
         test.done();

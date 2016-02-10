@@ -12,7 +12,7 @@ var imageLocation = 'img/';
 //users email addresss
 var username ='paul.conway@ark-energy.eu';
 //users password
-var password ='Ballygarve1993';
+var password ='Killoe1993';
 //Microsoft Azure login URL
 var loginURL='/login.microsoftonline.com/';
 //Microsoft Account type: workOrSchoolAccount
@@ -39,6 +39,18 @@ var widgetTitle2 ="Renewable Production: Actual and Forecast (daily average)";
 //Can we configure the component
 //If we can, set to true
 //if we cant set to false
+
+/*Date.prototype.yyyymmdd = function() {
+    var yyyy = this.getFullYear().toString();
+    var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+    var dd  = this.getDate().toString();
+    return yyyy+ "-" + (mm[1]?mm:"0"+mm[0])+ "-" + (dd[1]?dd:"0"+dd[0]); // padding
+};
+
+d = new Date();
+d.setDate(d.getDate()-21);*/
+
+
 var config = true;
 
 
@@ -48,6 +60,7 @@ casper.test.begin('UserLogin',function UserLogin(test)
     //Make Sure Correct Page is opened
     casper.start(URL + Market, function()
     {
+        //console.log(d.yyyymmdd());
         this.reload();
         console.log("EXPECTED NUMBER OF TEST: 27");
         //Check if the Title of the Page is correct
@@ -235,6 +248,7 @@ casper.test.begin("Widget --> "+widgetTitle+"",function (test)
         });
 
 
+/*
     //Check for name of widget
     casper.waitForSelector("header h2[title='"+widgetTitle2+"']",
         function success()
@@ -562,6 +576,52 @@ casper.test.begin("Widget --> "+widgetTitle+"",function (test)
             casper.capture(imageLocation+'Widget_Menu_'+widgetTitle+'Legend_2_Clicked'+imageType);
         });
     });
+*/
+
+    //Check if the configuration button exists
+    casper.waitForSelector("div[id='"+widgetID+"'] div[class='jarviswidget-ctrls'] a[title='Configure']",
+        function success()
+        {
+            this.wait(5000);
+            console.log("Checking if Widget_"+widgetTitle+" Configure Button Exists");
+            test.assertExists("div[id='"+widgetID+"'] div[class='jarviswidget-ctrls'] a[title='Configure']", "TEST4 --"+widgetTitle+" Configure Button Exists");
+            console.log("Clicking on Configure Button");
+            this.click("div[id='"+widgetID+"'] div[class='jarviswidget-ctrls'] a[title='Configure'] i");
+            casper.capture(imageLocation+'Widget_Menu_'+widgetTitle+'ChangedDateConfig'+imageType);
+        },
+        function fail()
+        {
+            console.log("TEST4 --Widget Menu "+widgetTitle+" Configure Button Does not Exists");
+            casper.capture(imageLocation+'Widget_Menu_'+widgetTitle+'ChangedDateConfigFail'+imageType);
+        });
+
+
+    casper.waitForSelector("#startDate",
+        function success()
+        {
+            this.wait(5000);
+            console.log("Its all grand");
+            casper.capture(imageLocation+'Widget_Menu_'+widgetTitle+'Grand'+imageType);
+        },
+        function fail()
+        {
+            console.log("Something is missing");
+            casper.capture(imageLocation+'Widget_Menu_'+widgetTitle+'Crap'+imageType);
+        });
+
+    casper.then(function()
+    {
+        this.wait(5000);
+        this.sendKeys("#startDate", "2016-01-19", {keepFocus: true, reset:true});
+        this.click("button[id='apply']");
+
+        //Screen Capture
+        this.wait(4000, function()
+        {
+            casper.capture(imageLocation+'Widget_Menu_'+widgetTitle+'ChangedDate'+imageType);
+        });
+    });
+
 
     //Run Test
     casper.run(function()
