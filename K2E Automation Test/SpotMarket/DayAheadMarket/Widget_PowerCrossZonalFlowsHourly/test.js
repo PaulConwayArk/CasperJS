@@ -10,8 +10,7 @@ var password = 'Killoe1993';
 var loginURL = '/login.microsoftonline.com/';
 var workOrSchoolAccount = '#aad_account_tile_link';
 var userAccount = workOrSchoolAccount;
-var Market = '#IntraDayMarket';
-var Page = '';
+var Page = '#DayAheadMarket';
 var widgetID = "wid-id-100";
 var widgetTitle = "Power CrossZonal Flows (hourly)";
 
@@ -19,7 +18,7 @@ var widgetTitle = "Power CrossZonal Flows (hourly)";
 //Test Login Page
 casper.test.begin('UserLogin', function UserLogin(test) {
     //Make Sure Correct Page is opened
-    casper.start(URL, function () {
+    casper.start(URL + Page, function () {
         //Check if the Title of the Page is correct
         this.reload();
         console.log('Check if the Title of the Page is correct');
@@ -163,6 +162,7 @@ casper.test.begin('UserLogin', function UserLogin(test) {
 });
 
 
+/*
 casper.test.begin('Does ' + widgetTitle + ' Component Exist', function UserLogin(test) {
     casper.start();
     casper.viewport(1280, 728);
@@ -398,7 +398,7 @@ casper.test.begin('Does ' + widgetTitle + ' Component DropDown Button Exists', f
         console.log("Clicking on Border Button");
         this.click("div[id='" + widgetID + "'] div[class='widget-toolbar app_dropDownHolder dropDownHolder'] button[class='btn btn-primary dropdown-toggle dropDownTextStyle']");
         //Screen Capture
-        this.wait(500, function () {
+        this.wait(1000, function () {
             casper.capture(imageLocation + 'Widget_Menu_' + widgetTitle + 'BorderClick' + imageType);
         });
     });
@@ -411,7 +411,7 @@ casper.test.begin('Does ' + widgetTitle + ' Component DropDown Button Exists', f
             console.log("Clicking on Border Zone Border_Graph_1");
             this.click("div[id='" + widgetID + "'] div[class='widget-toolbar app_dropDownHolder dropDownHolder'] ul[class='dropdown-menu .dropDownMenu'] li:nth-child(4) a");
             console.log("Downloading Border_Graph_1");
-            this.wait(500, function () {
+            this.wait(1000, function () {
                 casper.capture(imageLocation + 'Widget_Menu_' + widgetTitle + 'Border_Graph_1' + imageType);
             });
         },
@@ -425,7 +425,7 @@ casper.test.begin('Does ' + widgetTitle + ' Component DropDown Button Exists', f
         console.log("Downloading Border_Graph_2");
         this.click("div[id='" + widgetID + "'] div[class='widget-toolbar app_dropDownHolder dropDownHolder'] ul[class='dropdown-menu .dropDownMenu'] li:nth-child(3) a");
         //Screen Capture
-        this.wait(500, function () {
+        this.wait(1000, function () {
             casper.capture(imageLocation + 'Widget_Menu_' + widgetTitle + 'Border_Graph_2' + imageType);
         });
     });
@@ -435,7 +435,7 @@ casper.test.begin('Does ' + widgetTitle + ' Component DropDown Button Exists', f
         console.log("Downloading Border_Graph_3");
         this.click("div[id='" + widgetID + "'] div[class='widget-toolbar app_dropDownHolder dropDownHolder'] ul[class='dropdown-menu .dropDownMenu'] li:nth-child(13) a");
         //Screen Capture
-        this.wait(500, function () {
+        this.wait(1000, function () {
             casper.capture(imageLocation + 'Widget_Menu_' + widgetTitle + 'Border_Graph_3' + imageType);
         });
     });
@@ -445,7 +445,7 @@ casper.test.begin('Does ' + widgetTitle + ' Component DropDown Button Exists', f
         console.log("Downloading Border_Graph_4");
         this.click("div[id='" + widgetID + "'] div[class='widget-toolbar app_dropDownHolder dropDownHolder'] ul[class='dropdown-menu .dropDownMenu'] li:nth-child(16) a");
         //Screen Capture
-        this.wait(500, function () {
+        this.wait(1000, function () {
             casper.capture(imageLocation + 'Widget_Menu_' + widgetTitle + 'Border_Graph_4' + imageType);
         });
     });
@@ -587,47 +587,89 @@ casper.test.begin('Does ' + widgetTitle + ' Component Configure Button Exists', 
         });
     });
 
-
     casper.run(function () {
         test.done();
     });
 });
 
 
-casper.test.begin('Does ' + widgetTitle + ' Component Configure Button Exists', function UserLogin(test) {
+casper.test.begin('Does ' + widgetTitle + ' Component Legend Exists', function UserLogin(test) {
     casper.start();
     casper.viewport(1280, 728);
 
+    //Click on Legend
+    //See if the Legend Exists
+    casper.waitForSelector("div[id='"+widgetID+"'] svg g[class='highcharts-legend']",
+        function success()
+        {
+            console.log("Checking if Widget_"+widgetTitle+" Legend Exists");
+            test.assertExists("div[id='"+widgetID+"'] svg g[class='highcharts-legend']", "TEST18 --"+widgetTitle+" Legend Exists");
+        },
+        function fail()
+        {
+            console.log("TEST18 --Widget Menu "+widgetTitle+" Legend Does not Exists");
+            casper.capture(imageLocation+'Widget_Menu_'+widgetTitle+'_Test18_Fail'+imageType);
+        });
+
+    //If the legend Exists, click on each item of the legend until no data is present
+    //Check if the first child of the legend exists
+    casper.waitForSelector("div[id='"+widgetID+"'] svg g[class='highcharts-legend'] g g:nth-child(1)",
+        function success()
+        {
+            console.log("Checking if Widget_"+widgetTitle+" Legend first child Exists");
+            test.assertExists("div[id='"+widgetID+"'] svg g[class='highcharts-legend'] g g:nth-child(1)", "TEST19 --"+widgetTitle+" first child of the Legend Exists");
+        },
+        function fail()
+        {
+            console.log("TEST19 --Widget Menu "+widgetTitle+" first child of the Legend Does not Exists");
+            casper.capture(imageLocation+'Widget_Menu_'+widgetTitle+'_Test19_Fail'+imageType);
+        });
+
+    //Click first child of the legend
+    casper.then(function()
+    {
+        console.log("Clicking first child of the Legends Button");
+        this.click("div[id='"+widgetID+"'] svg g[class='highcharts-legend'] g g:nth-child(1)");
+        //Screen Capture
+        this.wait(250, function()
+        {
+            casper.capture(imageLocation+'Widget_Menu_'+widgetTitle+'Legend_1_Clicked'+imageType);
+        });
+    });
+
+    //Check if the second child of the legend exists
+    casper.waitForSelector("div[id='"+widgetID+"'] svg g[class='highcharts-legend'] g g:nth-child(2)",
+        function success()
+        {
+            console.log("Checking if Widget_"+widgetTitle+" Legend second child Exists");
+            test.assertExists("div[id='"+widgetID+"'] svg g[class='highcharts-legend'] g g:nth-child(2)", "TEST20 --"+widgetTitle+" second child of the Legend Exists");
+        },
+        function fail()
+        {
+            console.log("TEST20 --Widget Menu "+widgetTitle+" first child of the Legend Does not Exists");
+            casper.capture(imageLocation+'Widget_Menu_'+widgetTitle+'_Test20_Fail'+imageType);
+        });
+
+    //Click second child of the legend
+    casper.then(function()
+    {
+        console.log("Clicking second child of the Legends Button");
+        this.click("div[id='"+widgetID+"'] svg g[class='highcharts-legend'] g g:nth-child(2)");
+        //Screen Capture
+        this.wait(250, function()
+        {
+            casper.capture(imageLocation+'Widget_Menu_'+widgetTitle+'Legend_2_Clicked'+imageType);
+        });
+    });
 
     casper.run(function () {
         test.done();
     });
 });
+*/
 
 
-casper.test.begin('Does ' + widgetTitle + ' Component Configure Button Exists', function UserLogin(test) {
-    casper.start();
-    casper.viewport(1280, 728);
 
-
-    casper.run(function () {
-        test.done();
-    });
-});
-
-
-casper.test.begin('Does ' + widgetTitle + ' Component Configure Button Exists', function UserLogin(test) {
-    casper.start();
-    casper.viewport(1280, 728);
-
-
-    casper.run(function () {
-        test.done();
-    });
-});
-
-
-/*
  casper.test.begin("Widget --> "+widgetTitle+"",function (test)
  {
  var navOpened = false;
@@ -1196,4 +1238,3 @@ casper.test.begin('Does ' + widgetTitle + ' Component Configure Button Exists', 
  });
  });
 
- */

@@ -12,7 +12,7 @@ var imageLocation = 'img/';
 //users email addresss
 var username ='paul.conway@ark-energy.eu';
 //users password
-var password ='Ballygarve1993';
+var password ='Killoe1993';
 //Microsoft Azure login URL
 var loginURL='/login.microsoftonline.com/';
 //Microsoft Account type: workOrSchoolAccount
